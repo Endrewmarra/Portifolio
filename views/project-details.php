@@ -42,10 +42,14 @@ $projectImages = isset($project['images']) && is_array($project['images'])
                 <div class="project-gallery__grid">
                     <?php foreach ($projectImages as $imageIndex => $image): ?>
                         <?php
-                        $isFeaturedImage = $imageIndex === 0 && count($projectImages) > 1;
+                        $isFeaturedImage = $imageIndex === 0;
                         $itemClass = $isFeaturedImage
                             ? 'project-gallery__item project-gallery__item--featured'
                             : 'project-gallery__item';
+                        $galleryLinkLabel = sprintf(
+                            'Abrir %s em tamanho original (nova aba)',
+                            $image['alt']
+                        );
                         ?>
                         <figure class="<?= $itemClass ?>">
                             <a
@@ -53,7 +57,7 @@ $projectImages = isset($project['images']) && is_array($project['images'])
                                 href="<?= $escape($image['src']) ?>"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                aria-label="Abrir captura <?= $imageIndex + 1 ?> de <?= count($projectImages) ?> em tamanho original"
+                                aria-label="<?= $escape($galleryLinkLabel) ?>"
                             >
                                 <img
                                     src="<?= $escape($image['src']) ?>"

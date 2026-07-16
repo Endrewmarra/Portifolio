@@ -62,30 +62,12 @@ foreach (['title' => 120, 'summary' => 280] as $field => $maximumLength) {
     }
 }
 
-$validateHttpsUrl = static function (mixed $value): ?string {
-    if (!is_string($value)) {
-        return null;
-    }
-
-    $url = trim($value);
-
-    if (filter_var($url, FILTER_VALIDATE_URL) === false) {
-        return null;
-    }
-
-    return parse_url($url, PHP_URL_SCHEME) === 'https' ? $url : null;
-};
-
-$profile['github'] = $validateHttpsUrl($rawProfile['github'] ?? null);
-$profile['linkedin'] = $validateHttpsUrl($rawProfile['linkedin'] ?? null);
-$whatsappUrl = $validateHttpsUrl($rawProfile['whatsapp'] ?? null);
-
-if (
-    $whatsappUrl !== null
-    && in_array(parse_url($whatsappUrl, PHP_URL_HOST), ['api.whatsapp.com', 'wa.me'], true)
-) {
-    $profile['whatsapp'] = $whatsappUrl;
-}
+$profile['github'] = portfolio_validate_https_url($rawProfile['github'] ?? null);
+$profile['linkedin'] = portfolio_validate_https_url($rawProfile['linkedin'] ?? null);
+$profile['whatsapp'] = portfolio_validate_https_url(
+    $rawProfile['whatsapp'] ?? null,
+    ['api.whatsapp.com', 'wa.me']
+);
 
 if (isset($rawProfile['email']) && is_string($rawProfile['email'])) {
     $email = trim($rawProfile['email']);

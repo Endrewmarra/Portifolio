@@ -7,6 +7,33 @@ if (!defined('PORTFOLIO_APP')) {
     exit;
 }
 
+function portfolio_validate_https_url(mixed $value, array $allowedHosts = []): ?string
+{
+    if (!is_string($value)) {
+        return null;
+    }
+
+    $url = trim($value);
+
+    if (
+        filter_var($url, FILTER_VALIDATE_URL) === false
+        || strtolower((string) parse_url($url, PHP_URL_SCHEME)) !== 'https'
+    ) {
+        return null;
+    }
+
+    if ($allowedHosts !== []) {
+        $host = strtolower((string) parse_url($url, PHP_URL_HOST));
+        $normalizedHosts = array_map('strtolower', $allowedHosts);
+
+        if (!in_array($host, $normalizedHosts, true)) {
+            return null;
+        }
+    }
+
+    return $url;
+}
+
 $isDevelopment = PHP_SAPI === 'cli-server' || getenv('APP_ENV') === 'development';
 
 error_reporting(E_ALL);

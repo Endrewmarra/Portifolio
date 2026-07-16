@@ -51,20 +51,6 @@ $slugify = static function (string $value): string {
     return trim(is_string($slug) ? $slug : '', '-');
 };
 
-$validateHttpsUrl = static function (mixed $value): ?string {
-    if (!is_string($value)) {
-        return null;
-    }
-
-    $url = trim($value);
-
-    if (filter_var($url, FILTER_VALIDATE_URL) === false) {
-        return null;
-    }
-
-    return parse_url($url, PHP_URL_SCHEME) === 'https' ? $url : null;
-};
-
 $readOptionalText = static function (mixed $value, int $maximumLength): ?string {
     if (!is_string($value)) {
         return null;
@@ -78,8 +64,7 @@ $readOptionalText = static function (mixed $value, int $maximumLength): ?string 
 $projectImagesRoot = realpath(__DIR__ . '/../assets/images/projects');
 $normalizeImage = static function (
     mixed $rawImage,
-    string $projectName,
-    int $position
+    string $projectName
 ) use ($projectImagesRoot, $readOptionalText): ?array {
     if (!is_string($projectImagesRoot)) {
         return null;
@@ -153,7 +138,7 @@ $normalizeImage = static function (
 
     return [
         'src' => 'assets/images/projects/' . $encodedImage,
-        'alt' => $alternativeText ?? sprintf('Captura %d do projeto %s', $position, $projectName),
+        'alt' => $alternativeText ?? sprintf('Captura de tela do projeto %s', $projectName),
     ];
 };
 
@@ -207,8 +192,8 @@ foreach ($rawProjects as $index => $rawProject) {
     $seenImages = [];
 
     if (isset($rawProject['images']) && is_array($rawProject['images'])) {
-        foreach (array_slice($rawProject['images'], 0, 6) as $imageIndex => $rawImage) {
-            $image = $normalizeImage($rawImage, $name, $imageIndex + 1);
+        foreach ($rawProject['images'] as $rawImage) {
+            $image = $normalizeImage($rawImage, $name);
 
             if ($image === null || isset($seenImages[$image['src']])) {
                 continue;
@@ -216,6 +201,10 @@ foreach ($rawProjects as $index => $rawProject) {
 
             $seenImages[$image['src']] = true;
             $images[] = $image;
+
+            if (count($images) === 6) {
+                break;
+            }
         }
     }
 
@@ -227,8 +216,8 @@ foreach ($rawProjects as $index => $rawProject) {
         'shortDescription' => $shortDescription,
         'description' => $readOptionalText($rawProject['descricaoCompleta'] ?? null, 5000),
         'technologies' => $technologies,
-        'repositoryUrl' => $validateHttpsUrl($rawProject['link'] ?? null),
-        'demoUrl' => $validateHttpsUrl($demoValue),
+        'repositoryUrl' => portfolio_validate_https_url($rawProject['link'] ?? null),
+        'demoUrl' => portfolio_validate_https_url($demoValue),
         'status' => $readOptionalText($rawProject['status'] ?? null, 80),
         'featured' => isset($rawProject['destaque']) && is_bool($rawProject['destaque'])
             ? $rawProject['destaque']
