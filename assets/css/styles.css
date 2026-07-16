@@ -1,0 +1,91 @@
+:root {
+    /* ===== Primary Colors ===== */
+    --color-primary: #007EA7;
+    --color-primary-light: #00A8E8;
+
+    /* ===== Neutral Colors ===== */
+    --color-background: #FFFFFF;
+    --color-surface: #F8FAFC;
+    --color-border: #E5E7EB;
+
+    /* ===== Dark Colors ===== */
+    --color-text: #00171F;
+    --color-text-secondary: #4B5563;
+    --color-heading: #003459;
+
+    /* ===== States ===== */
+    --color-success: #16A34A;
+    --color-warning: #F59E0B;
+    --color-danger: #DC2626;
+
+    /* ===== Links ===== */
+    --color-link: var(--color-primary);
+    --color-link-hover: var(--color-primary-light);
+
+    /* ===== Buttons ===== */
+    --button-bg: var(--color-primary);
+    --button-bg-hover: var(--color-heading);
+    --button-text: #FFFFFF;
+
+    /* ===== Cards ===== */
+    --card-bg: #FFFFFF;
+    --card-border: #E5E7EB;
+    --card-shadow: 0 6px 18px rgba(0, 23, 31, 0.08);
+
+    /* ===== Layout ===== */
+    --container-width: 1200px;
+    --section-spacing: 6rem;
+    --border-radius: 12px;
+
+    /* ===== Typography ===== */
+    --font-family: "Inter", sans-serif;
+
+    --font-size-xs: .75rem;
+    --font-size-sm: .875rem;
+    --font-size-md: 1rem;
+    --font-size-lg: 1.25rem;
+    --font-size-xl: 2rem;
+    --font-size-2xl: 3rem;
+
+    /* ===== Transition ===== */
+    --transition: .25s ease;
+}
+
+*{
+    margin:0;
+}
+body{
+    background-color: var(--color-background);
+    color:var(--color-text);
+    width: 100dvw;
+    height: 100dvh;
+    display: flex;
+    flex-direction: row;
+    
+}
+aside{
+    width: 20%;
+    background-color: color-mix(in srgb, var(--color-primary   ) 50%, transparent);
+    border-right: 2px solid var(--color-primary);
+    
+}
+main{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap:5rem;
+    width: calc(100% - 20% - 2rem);
+    height: calc(100% - 2rem);
+    margin:1rem;
+}
+#about{
+    width: 65%;
+    text-align: justify;
+    }
+
+#projects{
+   
+    display: grid;
+    grid-template-columns: auto auto;
+    
+}
