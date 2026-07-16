@@ -9,7 +9,13 @@
     "link": "https://github.com/Endrewmarra/Concursos"
   },
   {
-    "images": [],
+    "images": [
+      {"src":"agro-fatec/HomePage.png","alt":"Página inicial AgroConsult"},
+      {"src":"agro-fatec/ServicesCard.png","alt":"Cards sobre serviços fornecidos"},
+      {"src":"agro-fatec/ResultCards.png","alt":"Cards de apresentação de resultados"},
+      {"src":"agro-fatec/Footer.png","alt":"roda pé final com links e contatos"},
+      {"src":"agro-fatec/FullPage.png","alt":"pagina completa"}
+    ],
     "slug": "agro-fatec",
     "nome": "Agro FATEC",
     "descricao": "Protótipo de plataforma web desenvolvido a partir de um layout no Figma, com frontend componentizado e gerenciamento dinâmico de conteúdo.",
