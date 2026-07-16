@@ -1,0 +1,13 @@
+Options -Indexes
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule (^|/)\. - [F,L]
+    RewriteRule ^(?:components|config|data|views)(?:/|$) - [F,L,NC]
+</IfModule>
+
+<IfModule mod_authz_core.c>
+    <FilesMatch "(?i)(^\.|\.json$|\.md$|\.log$|\.env$|^LICENSE$|^router\.php$)">
+        Require all denied
+    </FilesMatch>
+</IfModule>
