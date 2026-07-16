@@ -1,5 +1,5 @@
 [
-  {
+  { "images":[],
     "nome": "Cosplay Score System",
     "descricao": "Sistema em desenvolvimento para gerenciar concursos de cosplay, digitalizar as avaliações dos jurados e gerar a classificação dos participantes.",
     "tecnologias": [
@@ -9,7 +9,7 @@
     ],
     "link": "https://github.com/Endrewmarra/Concursos"
   },
-  {
+  {"images":[],
     "nome": "Agro FATEC",
     "descricao": "Protótipo de plataforma web desenvolvido a partir de um layout no Figma, com frontend componentizado e gerenciamento dinâmico de conteúdo.",
     "tecnologias": [
@@ -22,7 +22,7 @@
     ],
     "link": "https://github.com/Endrewmarra/agro-fatec"
   },
-  {
+  {"images":[],
     "nome": "MTG ETL Project",
     "descricao": "Pipeline ETL que extrai dados da API da Scryfall, processa grandes arquivos JSON em streaming e carrega os dados normalizados no MongoDB.",
     "tecnologias": [
@@ -35,7 +35,7 @@
     ],
     "link": "https://github.com/Endrewmarra/ETLProject-with-ScryfallMtgAPI"
   },
-  {
+  {"images":[],
     "nome": "Plataforma PGZero",
     "descricao": "Jogo de plataforma 2D desenvolvido para um teste técnico, com movimentação, gravidade, inimigos, pontuação, power-ups e condições de vitória.",
     "tecnologias": [
@@ -46,7 +46,7 @@
     ],
     "link": "https://github.com/Endrewmarra/Plataforma-pgZero"
   },
-  {
+  {"images":[],
     "nome": "Comparação de Métodos de Ordenação",
     "descricao": "Aplicação que implementa e compara o tempo de execução de diferentes algoritmos de ordenação utilizando listas geradas aleatoriamente.",
     "tecnologias": [
@@ -57,7 +57,7 @@
     ],
     "link": "https://github.com/Endrewmarra/comparing-sorting-methods"
   },
-  {
+  {"images":[],
     "nome": "Simple Gym",
     "descricao": "Projeto acadêmico de engenharia de software para planejar um sistema de gestão de academia, com foco na geração de treinos, controle financeiro, lotação e calendário.",
     "tecnologias": [
