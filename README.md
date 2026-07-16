@@ -15,7 +15,7 @@ O MVP do portfólio está funcional:
 - navegação por teclado, foco visível e destaque da seção atual;
 - proteção dos arquivos PHP internos e cabeçalhos básicos de segurança.
 
-As capturas dos projetos, alguns status e o endereço público ainda dependem de conteúdo ou hospedagem a serem fornecidos.
+Alguns status, descrições completas e o endereço público ainda dependem de conteúdo ou hospedagem a serem fornecidos.
 
 ## Tecnologias do portfólio
 

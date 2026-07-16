@@ -1,6 +1,19 @@
 [
   {
-    "images": [],
+    "images": [
+      {
+        "src": "cosplay-score-system/AdminPage.png",
+        "alt": "Painel administrativo com controles do concurso, participantes da rodada e classificação"
+      },
+      {
+        "src": "cosplay-score-system/JudgePage.png",
+        "alt": "Tela de avaliação do jurado com participante e critérios de pontuação"
+      },
+      {
+        "src": "cosplay-score-system/Login.png",
+        "alt": "Tela de login do sistema de concursos de cosplay"
+      }
+    ],
     "slug": "cosplay-score-system",
     "nome": "Cosplay Score System",
     "descricao": "Sistema em desenvolvimento para gerenciar concursos de cosplay, digitalizar as avaliações dos jurados e gerar a classificação dos participantes.",
@@ -10,11 +23,11 @@
   },
   {
     "images": [
-      {"src":"agro-fatec/HomePage.png","alt":"Página inicial AgroConsult"},
-      {"src":"agro-fatec/ServicesCard.png","alt":"Cards sobre serviços fornecidos"},
-      {"src":"agro-fatec/ResultCards.png","alt":"Cards de apresentação de resultados"},
-      {"src":"agro-fatec/Footer.png","alt":"roda pé final com links e contatos"},
-      {"src":"agro-fatec/FullPage.png","alt":"pagina completa"}
+      {"src":"agro-fatec/HomePage.webp","alt":"Página inicial da plataforma AgroConsult"},
+      {"src":"agro-fatec/ServicesCard.webp","alt":"Cards dos serviços oferecidos pela AgroConsult"},
+      {"src":"agro-fatec/ResultCards.webp","alt":"Cards de apresentação dos resultados da AgroConsult"},
+      {"src":"agro-fatec/Footer.webp","alt":"Rodapé da plataforma com links e informações de contato"},
+      {"src":"agro-fatec/FullPage.webp","alt":"Visão completa da página inicial da AgroConsult"}
     ],
     "slug": "agro-fatec",
     "nome": "Agro FATEC",
@@ -30,7 +43,36 @@
     "link": "https://github.com/Endrewmarra/agro-fatec"
   },
   {
-    "images": [],
+    "images": [
+      {"src":"bingo-app/HomePageV1.png","alt":"Tela inicial do Bingo Halloween com seleção entre host e jogador"},
+      {"src":"bingo-app/HostPageV1.png","alt":"Painel do host com número atual, histórico dos sorteios e controle da partida"},
+      {"src":"bingo-app/PlayerPageV1.png","alt":"Cartela do jogador com números marcados durante a partida"},
+      {"src":"bingo-app/PlayerPageV2.png","alt":"Versão alternativa da cartela do jogador com botão para anunciar bingo"}
+    ],
+    "slug": "bingo-app",
+    "nome": "Bingo App",
+    "descricao": "Frontend de um jogo de bingo com fluxos para host e jogador, sorteio e histórico de números, geração de cartelas e marcação dos números durante a partida.",
+    "status": "Em desenvolvimento",
+    "tecnologias": [
+      "React",
+      "TypeScript",
+      "Material UI",
+      "React Router",
+      "Vite"
+    ],
+    "link": "https://github.com/VictorGVC/BingoAppFrontend"
+  },
+  {
+    "images": [
+      {
+        "src": "mtg-etl-project/etl.png",
+        "alt": "Fluxo principal em Python executando as etapas de extração, transformação e carga"
+      },
+      {
+        "src": "mtg-etl-project/mongo.png",
+        "alt": "Coleção de cartas carregada no MongoDB Compass após o processamento ETL"
+      }
+    ],
     "slug": "mtg-etl-project",
     "nome": "MTG ETL Project",
     "descricao": "Pipeline ETL que extrai dados da API da Scryfall, processa grandes arquivos JSON em streaming e carrega os dados normalizados no MongoDB.",
@@ -45,7 +87,24 @@
     "link": "https://github.com/Endrewmarra/ETLProject-with-ScryfallMtgAPI"
   },
   {
-    "images": [],
+    "images": [
+      {
+        "src": "plataforma-pgzero/GameStart.png",
+        "alt": "Partida do jogo de plataforma com personagem, plataformas, moedas, inimigos e escudos"
+      },
+      {
+        "src": "plataforma-pgzero/Menu.png",
+        "alt": "Menu principal do jogo com opções para jogar, controlar o som e sair"
+      },
+      {
+        "src": "plataforma-pgzero/Tutorial.png",
+        "alt": "Tela de instruções com controles, pontuação e condições da partida"
+      },
+      {
+        "src": "plataforma-pgzero/GameFinish.png",
+        "alt": "Tela de vitória exibida ao concluir a fase com cinquenta pontos"
+      }
+    ],
     "slug": "plataforma-pgzero",
     "nome": "Plataforma PGZero",
     "descricao": "Jogo de plataforma 2D desenvolvido para um teste técnico, com movimentação, gravidade, inimigos, pontuação, power-ups e condições de vitória.",
@@ -57,7 +116,11 @@
     "link": "https://github.com/Endrewmarra/Plataforma-pgZero"
   },
   {
-    "images": [],
+    "images": [
+      {"src":"comparacao-de-metodos-de-ordenacao/Results.png","alt":"Resultados da comparação entre Bubble Sort, Selection Sort e Tim Sort"},
+      {"src":"comparacao-de-metodos-de-ordenacao/BubbleSort.png","alt":"Algoritmo Bubble Sort implementado em Python"},
+      {"src":"comparacao-de-metodos-de-ordenacao/SelectionSort.png","alt":"Algoritmo Selection Sort implementado em Python"}
+    ],
     "slug": "comparacao-de-metodos-de-ordenacao",
     "nome": "Comparação de Métodos de Ordenação",
     "descricao": "Aplicação que implementa e compara o tempo de execução de diferentes algoritmos de ordenação utilizando listas geradas aleatoriamente.",
@@ -65,7 +128,7 @@
     "link": "https://github.com/Endrewmarra/comparing-sorting-methods"
   },
   {
-    "images": [],
+    "images": [{"src":"simple-gym/FichaTreino.png", "alt":"Ficha de treino utilizada pelo cliente."}],
     "slug": "simple-gym",
     "nome": "Simple Gym",
     "descricao": "Projeto acadêmico de engenharia de software para planejar um sistema de gestão de academia, com foco na geração de treinos, controle financeiro, lotação e calendário.",
