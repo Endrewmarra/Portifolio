@@ -11,7 +11,10 @@ $requestedSlug = isset($_GET['slug']) && is_string($_GET['slug'])
 
 $project = null;
 
-if (preg_match('/^[a-z0-9]+(?:-[a-z0-9]+)*$/', $requestedSlug) === 1) {
+if (
+    strlen($requestedSlug) <= 120
+    && preg_match('/^[a-z0-9]+(?:-[a-z0-9]+)*$/', $requestedSlug) === 1
+) {
     foreach ($projects as $availableProject) {
         if ($availableProject['slug'] === $requestedSlug) {
             $project = $availableProject;

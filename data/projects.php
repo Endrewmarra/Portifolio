@@ -23,7 +23,9 @@ if (!is_array($rawProjects)) {
 }
 
 $slugify = static function (string $value): string {
-    $asciiValue = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $value);
+    $asciiValue = function_exists('iconv')
+        ? iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $value)
+        : false;
     $normalizedValue = is_string($asciiValue) ? $asciiValue : $value;
     $slug = strtolower($normalizedValue);
     $slug = preg_replace('/[^a-z0-9]+/', '-', $slug);
@@ -104,6 +106,7 @@ foreach ($rawProjects as $index => $rawProject) {
 
     if ($rawImage !== '' && is_string($projectImagesRoot)) {
         $normalizedImage = str_replace('\\', '/', $rawImage);
+        $allowedExtensions = ['avif', 'jpeg', 'jpg', 'png', 'webp'];
         $knownPrefixes = [
             'assets/images/projects/',
             './images/projects/',
@@ -126,6 +129,7 @@ foreach ($rawProjects as $index => $rawProject) {
             if (
                 is_string($imagePath)
                 && str_starts_with(strtolower($imagePath), strtolower($projectImagesRoot . DIRECTORY_SEPARATOR))
+                && in_array(strtolower(pathinfo($imagePath, PATHINFO_EXTENSION)), $allowedExtensions, true)
             ) {
                 $relativeImage = str_replace(
                     DIRECTORY_SEPARATOR,
