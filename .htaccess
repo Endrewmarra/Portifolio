@@ -1,3 +1,7 @@
+<IfModule mod_dir.c>
+    DirectoryIndex index.php
+</IfModule>
+
 Options -Indexes
 
 <IfModule mod_rewrite.c>
@@ -10,4 +14,17 @@ Options -Indexes
     <FilesMatch "(?i)(^\.|\.json$|\.md$|\.log$|\.env$|^LICENSE$|^router\.php$)">
         Require all denied
     </FilesMatch>
+</IfModule>
+
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType text/css "access plus 1 day"
+    ExpiresByType application/javascript "access plus 1 day"
+    ExpiresByType text/javascript "access plus 1 day"
+    ExpiresByType image/avif "access plus 7 days"
+    ExpiresByType image/gif "access plus 7 days"
+    ExpiresByType image/jpeg "access plus 7 days"
+    ExpiresByType image/png "access plus 7 days"
+    ExpiresByType image/svg+xml "access plus 7 days"
+    ExpiresByType image/webp "access plus 7 days"
 </IfModule>

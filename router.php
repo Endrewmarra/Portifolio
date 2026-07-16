@@ -2,6 +2,10 @@
 
 declare(strict_types=1);
 
+if (!headers_sent()) {
+    header_remove('X-Powered-By');
+}
+
 $requestPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
 $requestPath = is_string($requestPath) ? rawurldecode($requestPath) : '/';
 $requestPath = '/' . ltrim(str_replace('\\', '/', $requestPath), '/');

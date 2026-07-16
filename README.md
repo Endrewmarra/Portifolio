@@ -15,11 +15,11 @@ O MVP do portfólio está funcional:
 - navegação por teclado, foco visível e destaque da seção atual;
 - proteção dos arquivos PHP internos e cabeçalhos básicos de segurança.
 
-Alguns status, descrições completas e o endereço público ainda dependem de conteúdo ou hospedagem a serem fornecidos.
+Alguns status, descrições completas, capturas adicionais e o endereço público ainda dependem de conteúdo real ou da hospedagem. As capturas atuais usam material real dos projetos; novas imagens só devem ser adicionadas quando esse conteúdo estiver disponível.
 
 ## Tecnologias do portfólio
 
-- PHP 8.1 ou superior;
+- PHP 8.3 ou superior em produção;
 - HTML5 semântico;
 - CSS3 responsivo;
 - JavaScript sem dependências;
@@ -49,6 +49,8 @@ O `router.php` impede que arquivos internos, dotfiles, documentos e JSONs sejam 
 - Categorias da seção Tecnologias: `data/technologies.php`.
 
 O primeiro item de `images` é a capa do card e todas as imagens válidas aparecem na página de detalhes. A quantidade é calculada automaticamente.
+
+Os dados de contato configurados no portfólio são públicos e também ficam visíveis no repositório. Não utilize `assets/infos.JSON` para senhas, tokens ou outras informações sigilosas. Um arquivo `.env` deve ser reservado somente para segredos futuros que não sejam exibidos pelo site.
 
 ## Estrutura principal
 
@@ -81,6 +83,10 @@ O primeiro item de `images` é a capa do card e todas as imagens válidas aparec
 Os arquivos em `data/` validam e adaptam os JSONs antes da renderização. A paleta original permanece em `assets/css/styles.css`.
 
 ## Publicação
+
+Consulte o passo a passo em [`DEPLOY.md`](DEPLOY.md).
+
+**Versão publicada:** será adicionada após o primeiro deploy.
 
 - Em Apache, o `.htaccess` incluído bloqueia dotfiles, JSONs e diretórios internos. Confirme que `AllowOverride` está habilitado.
 - Em Nginx ou outro servidor, configure regras equivalentes e permita acesso público somente a `index.php`, `projeto.php` e aos arquivos necessários de `assets/css`, `assets/js` e `assets/images`.

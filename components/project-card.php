@@ -15,15 +15,24 @@ $images = isset($project['images']) && is_array($project['images'])
     ? $project['images']
     : [];
 $coverImage = $images[0] ?? null;
+$hasCoverImage = is_array($coverImage)
+    && isset($coverImage['src'], $coverImage['alt'])
+    && is_string($coverImage['src'])
+    && is_string($coverImage['alt'])
+    && trim($coverImage['src']) !== ''
+    && trim($coverImage['alt']) !== '';
+$cardClass = $hasCoverImage
+    ? 'project-card'
+    : 'project-card project-card--without-media';
 $technologies = isset($project['technologies']) && is_array($project['technologies'])
     ? $project['technologies']
     : [];
 $visibleTechnologies = array_slice($technologies, 0, 4);
 $hiddenTechnologyCount = max(0, count($technologies) - count($visibleTechnologies));
 ?>
-<article class="project-card">
-    <div class="project-card__media">
-        <?php if (is_array($coverImage)): ?>
+<article class="<?= $cardClass ?>">
+    <?php if ($hasCoverImage): ?>
+        <div class="project-card__media">
             <img
                 class="project-card__image"
                 src="<?= $escape($coverImage['src']) ?>"
@@ -37,12 +46,8 @@ $hiddenTechnologyCount = max(0, count($technologies) - count($visibleTechnologie
                     <?= count($images) ?> imagens
                 </span>
             <?php endif; ?>
-        <?php else: ?>
-            <div class="project-card__placeholder" aria-hidden="true">
-                <span>Imagem em breve</span>
-            </div>
-        <?php endif; ?>
-    </div>
+        </div>
+    <?php endif; ?>
 
     <div class="project-card__body">
         <h3><?= $escape($project['name']) ?></h3>

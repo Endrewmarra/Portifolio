@@ -27,7 +27,7 @@
       {"src":"agro-fatec/ServicesCard.webp","alt":"Cards dos serviços oferecidos pela AgroConsult"},
       {"src":"agro-fatec/ResultCards.webp","alt":"Cards de apresentação dos resultados da AgroConsult"},
       {"src":"agro-fatec/Footer.webp","alt":"Rodapé da plataforma com links e informações de contato"},
-      {"src":"agro-fatec/FullPage.webp","alt":"Visão completa da página inicial da AgroConsult"}
+      {"src":"agro-fatec/full-page.webp","alt":"Visão completa da página inicial da AgroConsult"}
     ],
     "slug": "agro-fatec",
     "nome": "Agro FATEC",
