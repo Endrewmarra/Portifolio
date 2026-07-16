@@ -15,9 +15,6 @@ $profileName = isset($profile['name']) && is_string($profile['name'])
 $profileTitle = isset($profile['title']) && is_string($profile['title'])
     ? $profile['title']
     : null;
-$profileSummary = isset($profile['summary']) && is_string($profile['summary'])
-    ? $profile['summary']
-    : null;
 ?>
 <aside class="sidebar" aria-label="Apresentação e navegação">
     <div class="sidebar__inner">
@@ -38,10 +35,6 @@ $profileSummary = isset($profile['summary']) && is_string($profile['summary'])
                 <a class="profile__name" href="index.php"><?= $escape($profileName) ?></a>
                 <?php if ($profileTitle !== null): ?>
                     <p class="profile__title"><?= $escape($profileTitle) ?></p>
-                <?php endif; ?>
-
-                <?php if ($profileSummary !== null): ?>
-                    <p class="profile__summary"><?= $escape($profileSummary) ?></p>
                 <?php endif; ?>
             </div>
         </div>

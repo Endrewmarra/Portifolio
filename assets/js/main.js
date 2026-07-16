@@ -1,21 +1,26 @@
 (() => {
     const navigationLinks = Array.from(document.querySelectorAll('.sidebar__nav a[href^="#"]'));
 
-    if (navigationLinks.length === 0 || !('IntersectionObserver' in window)) {
+    if (navigationLinks.length === 0) {
         return;
     }
 
-    const sections = navigationLinks
-        .map((link) => document.querySelector(link.hash))
-        .filter((section) => section !== null);
+    const navigationItems = navigationLinks
+        .map((link) => ({
+            link,
+            section: document.querySelector(link.hash),
+        }))
+        .filter((item) => item.section !== null);
 
-    if (sections.length === 0) {
+    if (navigationItems.length === 0) {
         return;
     }
 
-    const setActiveSection = (sectionId) => {
-        navigationLinks.forEach((link) => {
-            const isActive = link.hash === `#${sectionId}`;
+    let animationFrame = null;
+
+    const setActiveLink = (activeLink) => {
+        navigationItems.forEach(({ link }) => {
+            const isActive = link === activeLink;
             link.classList.toggle('is-active', isActive);
 
             if (isActive) {
@@ -26,21 +31,38 @@
         });
     };
 
-    const observer = new IntersectionObserver(
-        (entries) => {
-            const visibleSection = entries
-                .filter((entry) => entry.isIntersecting)
-                .sort((first, second) => second.intersectionRatio - first.intersectionRatio)[0];
+    const updateActiveSection = () => {
+        animationFrame = null;
 
-            if (visibleSection) {
-                setActiveSection(visibleSection.target.id);
+        const referenceLine = window.innerHeight * 0.35;
+        let activeItem = navigationItems[0];
+
+        navigationItems.forEach((item) => {
+            if (item.section.getBoundingClientRect().top <= referenceLine) {
+                activeItem = item;
             }
-        },
-        {
-            rootMargin: '-20% 0px -55% 0px',
-            threshold: [0.1, 0.35, 0.6],
-        }
-    );
+        });
 
-    sections.forEach((section) => observer.observe(section));
+        const pageBottomReached = window.scrollY + window.innerHeight
+            >= document.documentElement.scrollHeight - 2;
+
+        if (pageBottomReached) {
+            activeItem = navigationItems[navigationItems.length - 1];
+        }
+
+        setActiveLink(activeItem.link);
+    };
+
+    const scheduleUpdate = () => {
+        if (animationFrame !== null) {
+            return;
+        }
+
+        animationFrame = window.requestAnimationFrame(updateActiveSection);
+    };
+
+    window.addEventListener('scroll', scheduleUpdate, { passive: true });
+    window.addEventListener('resize', scheduleUpdate);
+    window.addEventListener('hashchange', scheduleUpdate);
+    updateActiveSection();
 })();
