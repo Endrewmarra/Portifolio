@@ -2,14 +2,22 @@
 
 declare(strict_types=1);
 
+if (!defined('PORTFOLIO_APP')) {
+    http_response_code(404);
+    exit;
+}
+
 $defaultProfile = [
     'name' => 'Endrew Marra Pedrosa',
+    'title' => null,
+    'summary' => null,
     'image' => null,
     'github' => null,
     'linkedin' => null,
     'email' => null,
     'phone' => null,
     'phoneHref' => null,
+    'whatsapp' => null,
 ];
 
 $profileFile = __DIR__ . '/../assets/infos.JSON';
@@ -42,6 +50,18 @@ if (isset($rawProfile['name']) && is_string($rawProfile['name'])) {
     }
 }
 
+foreach (['title' => 120, 'summary' => 280] as $field => $maximumLength) {
+    if (!isset($rawProfile[$field]) || !is_string($rawProfile[$field])) {
+        continue;
+    }
+
+    $value = trim($rawProfile[$field]);
+
+    if ($value !== '' && strlen($value) <= $maximumLength) {
+        $profile[$field] = $value;
+    }
+}
+
 $validateHttpsUrl = static function (mixed $value): ?string {
     if (!is_string($value)) {
         return null;
@@ -58,6 +78,14 @@ $validateHttpsUrl = static function (mixed $value): ?string {
 
 $profile['github'] = $validateHttpsUrl($rawProfile['github'] ?? null);
 $profile['linkedin'] = $validateHttpsUrl($rawProfile['linkedin'] ?? null);
+$whatsappUrl = $validateHttpsUrl($rawProfile['whatsapp'] ?? null);
+
+if (
+    $whatsappUrl !== null
+    && in_array(parse_url($whatsappUrl, PHP_URL_HOST), ['api.whatsapp.com', 'wa.me'], true)
+) {
+    $profile['whatsapp'] = $whatsappUrl;
+}
 
 if (isset($rawProfile['email']) && is_string($rawProfile['email'])) {
     $email = trim($rawProfile['email']);

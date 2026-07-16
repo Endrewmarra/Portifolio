@@ -2,29 +2,25 @@
 
 declare(strict_types=1);
 
-$escape = $escape ?? static fn (mixed $value): string => htmlspecialchars(
-    (string) $value,
-    ENT_QUOTES | ENT_SUBSTITUTE,
-    'UTF-8'
-);
+if (!defined('PORTFOLIO_APP')) {
+    http_response_code(404);
+    exit;
+}
+
 $profileName = isset($profile['name']) && is_string($profile['name'])
     ? $profile['name']
     : 'Endrew Marra Pedrosa';
-$technologies = [];
-
-foreach ($projects as $listedProject) {
-    foreach ($listedProject['technologies'] as $technology) {
-        if (!in_array($technology, $technologies, true)) {
-            $technologies[] = $technology;
-        }
-    }
-}
+$profileTitle = isset($profile['title']) && is_string($profile['title'])
+    ? $profile['title']
+    : 'Estudante de Análise e Desenvolvimento de Sistemas';
+$profileSummary = isset($profile['summary']) && is_string($profile['summary'])
+    ? $profile['summary']
+    : 'Experiência em projetos acadêmicos e pessoais.';
 ?>
 <header class="intro" id="inicio">
-    <p class="eyebrow">Portfólio</p>
     <h1>Olá, eu sou <?= $escape($profileName) ?>.</h1>
     <p class="intro__lead">
-        Estudante de Análise e Desenvolvimento de Sistemas, com experiência em projetos acadêmicos e pessoais.
+        <?= $escape($profileTitle) ?>. <?= $escape($profileSummary) ?>
     </p>
 </header>
 
@@ -46,9 +42,9 @@ foreach ($projects as $listedProject) {
             funcionais e focadas nas necessidades dos usuários.
         </p>
         <p>
-            Tenho experiência com projetos acadêmicos e pessoais utilizando Python, HTML, CSS, JavaScript, React,
-            FastAPI, SQL, MySQL, MongoDB e Git. Atualmente, também estou aprofundando meus conhecimentos em PHP por
-            meio do desenvolvimento deste portfólio.
+            Tenho experiência com projetos acadêmicos e pessoais nas áreas de desenvolvimento web, backend e dados.
+            Atualmente, também estou aprofundando meus conhecimentos em PHP por meio do desenvolvimento deste
+            portfólio.
         </p>
         <p>
             Acredito que aprender vai muito além da teoria. Gosto de construir projetos práticos, experimentar novas
@@ -62,7 +58,6 @@ foreach ($projects as $listedProject) {
     <div class="section-heading">
         <p class="eyebrow">Trabalhos selecionados</p>
         <h2 id="projetos-titulo">Projetos</h2>
-        <p>Projetos práticos e acadêmicos carregados diretamente do arquivo JSON do portfólio.</p>
     </div>
 
     <?php if ($projects !== []): ?>
@@ -83,12 +78,19 @@ foreach ($projects as $listedProject) {
         <p>Tecnologias e práticas presentes nos projetos apresentados.</p>
     </div>
 
-    <?php if ($technologies !== []): ?>
-        <ul class="technology-list">
-            <?php foreach ($technologies as $technology): ?>
-                <li><?= $escape($technology) ?></li>
+    <?php if ($technologyGroups !== []): ?>
+        <div class="technology-groups">
+            <?php foreach ($technologyGroups as $group): ?>
+                <article class="technology-group">
+                    <h3><?= $escape($group['name']) ?></h3>
+                    <ul class="technology-list">
+                        <?php foreach ($group['items'] as $technology): ?>
+                            <li><?= $escape($technology) ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                </article>
             <?php endforeach; ?>
-        </ul>
+        </div>
     <?php endif; ?>
 </section>
 
@@ -107,7 +109,18 @@ foreach ($projects as $listedProject) {
             </li>
         <?php endif; ?>
 
-        <?php if (!empty($profile['phoneHref']) && !empty($profile['phone'])): ?>
+        <?php if (!empty($profile['phone']) && !empty($profile['whatsapp'])): ?>
+            <li>
+                <span>Telefone / WhatsApp</span>
+                <a
+                    href="<?= $escape($profile['whatsapp']) ?>"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    <?= $escape($profile['phone']) ?>
+                </a>
+            </li>
+        <?php elseif (!empty($profile['phoneHref']) && !empty($profile['phone'])): ?>
             <li>
                 <span>Telefone</span>
                 <a href="tel:<?= $escape($profile['phoneHref']) ?>"><?= $escape($profile['phone']) ?></a>

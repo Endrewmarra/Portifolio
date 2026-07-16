@@ -2,6 +2,11 @@
 
 declare(strict_types=1);
 
+if (!defined('PORTFOLIO_APP')) {
+    http_response_code(404);
+    exit;
+}
+
 $projectsFile = __DIR__ . '/../assets/projects/projects.JSON';
 
 try {
@@ -23,12 +28,25 @@ if (!is_array($rawProjects)) {
 }
 
 $slugify = static function (string $value): string {
+    $value = strtr($value, [
+        'á' => 'a', 'à' => 'a', 'â' => 'a', 'ã' => 'a', 'ä' => 'a',
+        'é' => 'e', 'è' => 'e', 'ê' => 'e', 'ë' => 'e',
+        'í' => 'i', 'ì' => 'i', 'î' => 'i', 'ï' => 'i',
+        'ó' => 'o', 'ò' => 'o', 'ô' => 'o', 'õ' => 'o', 'ö' => 'o',
+        'ú' => 'u', 'ù' => 'u', 'û' => 'u', 'ü' => 'u',
+        'ç' => 'c',
+        'Á' => 'A', 'À' => 'A', 'Â' => 'A', 'Ã' => 'A', 'Ä' => 'A',
+        'É' => 'E', 'È' => 'E', 'Ê' => 'E', 'Ë' => 'E',
+        'Í' => 'I', 'Ì' => 'I', 'Î' => 'I', 'Ï' => 'I',
+        'Ó' => 'O', 'Ò' => 'O', 'Ô' => 'O', 'Õ' => 'O', 'Ö' => 'O',
+        'Ú' => 'U', 'Ù' => 'U', 'Û' => 'U', 'Ü' => 'U',
+        'Ç' => 'C',
+    ]);
     $asciiValue = function_exists('iconv')
         ? iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $value)
         : false;
     $normalizedValue = is_string($asciiValue) ? $asciiValue : $value;
-    $slug = strtolower($normalizedValue);
-    $slug = preg_replace('/[^a-z0-9]+/', '-', $slug);
+    $slug = preg_replace('/[^a-z0-9]+/', '-', strtolower($normalizedValue));
 
     return trim(is_string($slug) ? $slug : '', '-');
 };
@@ -47,7 +65,98 @@ $validateHttpsUrl = static function (mixed $value): ?string {
     return parse_url($url, PHP_URL_SCHEME) === 'https' ? $url : null;
 };
 
+$readOptionalText = static function (mixed $value, int $maximumLength): ?string {
+    if (!is_string($value)) {
+        return null;
+    }
+
+    $value = trim($value);
+
+    return $value !== '' && strlen($value) <= $maximumLength ? $value : null;
+};
+
 $projectImagesRoot = realpath(__DIR__ . '/../assets/images/projects');
+$normalizeImage = static function (
+    mixed $rawImage,
+    string $projectName,
+    int $position
+) use ($projectImagesRoot, $readOptionalText): ?array {
+    if (!is_string($projectImagesRoot)) {
+        return null;
+    }
+
+    $source = null;
+    $alternativeText = null;
+
+    if (is_string($rawImage)) {
+        $source = trim($rawImage);
+    } elseif (is_array($rawImage)) {
+        $source = isset($rawImage['src']) && is_string($rawImage['src'])
+            ? trim($rawImage['src'])
+            : null;
+        $alternativeText = $readOptionalText($rawImage['alt'] ?? null, 240);
+    }
+
+    if ($source === null || $source === '' || str_contains($source, '\\')) {
+        return null;
+    }
+
+    $normalizedSource = str_replace('\\', '/', $source);
+    $knownPrefixes = [
+        'assets/images/projects/',
+        './assets/images/projects/',
+        './images/projects/',
+        '../images/projects/',
+        'images/projects/',
+    ];
+
+    foreach ($knownPrefixes as $prefix) {
+        if (str_starts_with($normalizedSource, $prefix)) {
+            $normalizedSource = substr($normalizedSource, strlen($prefix));
+            break;
+        }
+    }
+
+    $pathSegments = explode('/', $normalizedSource);
+
+    if (
+        $normalizedSource === ''
+        || str_starts_with($normalizedSource, '/')
+        || preg_match('/^[a-z][a-z0-9+.-]*:/i', $normalizedSource) === 1
+        || array_filter(
+            $pathSegments,
+            static fn (string $segment): bool => $segment === '' || $segment === '.' || $segment === '..'
+        ) !== []
+    ) {
+        return null;
+    }
+
+    $imagePath = realpath(
+        $projectImagesRoot . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $normalizedSource)
+    );
+    $allowedExtensions = ['avif', 'jpeg', 'jpg', 'png', 'webp'];
+
+    if (
+        !is_string($imagePath)
+        || !str_starts_with(strtolower($imagePath), strtolower($projectImagesRoot . DIRECTORY_SEPARATOR))
+        || !in_array(strtolower(pathinfo($imagePath, PATHINFO_EXTENSION)), $allowedExtensions, true)
+    ) {
+        return null;
+    }
+
+    $relativeImage = str_replace(
+        DIRECTORY_SEPARATOR,
+        '/',
+        substr($imagePath, strlen($projectImagesRoot) + 1)
+    );
+    $encodedImage = implode('/', array_map('rawurlencode', explode('/', $relativeImage)));
+
+    return [
+        'src' => 'assets/images/projects/' . $encodedImage,
+        'alt' => $alternativeText ?? sprintf('Captura %d do projeto %s', $position, $projectName),
+    ];
+};
+
 $projects = [];
 $usedSlugs = [];
 
@@ -56,18 +165,18 @@ foreach ($rawProjects as $index => $rawProject) {
         continue;
     }
 
-    $name = isset($rawProject['nome']) && is_string($rawProject['nome'])
-        ? trim($rawProject['nome'])
-        : '';
-    $shortDescription = isset($rawProject['descricao']) && is_string($rawProject['descricao'])
-        ? trim($rawProject['descricao'])
-        : '';
+    $name = $readOptionalText($rawProject['nome'] ?? null, 160) ?? '';
+    $shortDescription = $readOptionalText($rawProject['descricao'] ?? null, 600) ?? '';
 
     if ($name === '' || $shortDescription === '') {
         continue;
     }
 
-    $baseSlug = $slugify($name);
+    $providedSlug = $readOptionalText($rawProject['slug'] ?? null, 120);
+    $baseSlug = $providedSlug !== null
+        && preg_match('/^[a-z0-9]+(?:-[a-z0-9]+)*$/', $providedSlug) === 1
+            ? $providedSlug
+            : $slugify($name);
 
     if ($baseSlug === '') {
         $baseSlug = 'projeto-' . ($index + 1);
@@ -82,73 +191,49 @@ foreach ($rawProjects as $index => $rawProject) {
     }
 
     $usedSlugs[$slug] = true;
-
     $technologies = [];
 
     if (isset($rawProject['tecnologias']) && is_array($rawProject['tecnologias'])) {
         foreach ($rawProject['tecnologias'] as $technology) {
-            if (!is_string($technology)) {
-                continue;
-            }
+            $technology = $readOptionalText($technology, 80);
 
-            $technology = trim($technology);
-
-            if ($technology !== '' && !in_array($technology, $technologies, true)) {
+            if ($technology !== null && !in_array($technology, $technologies, true)) {
                 $technologies[] = $technology;
             }
         }
     }
 
-    $image = null;
-    $rawImage = isset($rawProject['images'][0]) && is_string($rawProject['images'][0])
-        ? trim($rawProject['images'][0])
-        : '';
+    $images = [];
+    $seenImages = [];
 
-    if ($rawImage !== '' && is_string($projectImagesRoot)) {
-        $normalizedImage = str_replace('\\', '/', $rawImage);
-        $allowedExtensions = ['avif', 'jpeg', 'jpg', 'png', 'webp'];
-        $knownPrefixes = [
-            'assets/images/projects/',
-            './images/projects/',
-            '../images/projects/',
-            'images/projects/',
-        ];
+    if (isset($rawProject['images']) && is_array($rawProject['images'])) {
+        foreach (array_slice($rawProject['images'], 0, 6) as $imageIndex => $rawImage) {
+            $image = $normalizeImage($rawImage, $name, $imageIndex + 1);
 
-        foreach ($knownPrefixes as $prefix) {
-            if (str_starts_with($normalizedImage, $prefix)) {
-                $normalizedImage = substr($normalizedImage, strlen($prefix));
-                break;
+            if ($image === null || isset($seenImages[$image['src']])) {
+                continue;
             }
-        }
 
-        if ($normalizedImage !== '' && !str_contains($normalizedImage, '..')) {
-            $imagePath = realpath(
-                $projectImagesRoot . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $normalizedImage)
-            );
-
-            if (
-                is_string($imagePath)
-                && str_starts_with(strtolower($imagePath), strtolower($projectImagesRoot . DIRECTORY_SEPARATOR))
-                && in_array(strtolower(pathinfo($imagePath, PATHINFO_EXTENSION)), $allowedExtensions, true)
-            ) {
-                $relativeImage = str_replace(
-                    DIRECTORY_SEPARATOR,
-                    '/',
-                    substr($imagePath, strlen($projectImagesRoot) + 1)
-                );
-                $encodedImage = implode('/', array_map('rawurlencode', explode('/', $relativeImage)));
-                $image = 'assets/images/projects/' . $encodedImage;
-            }
+            $seenImages[$image['src']] = true;
+            $images[] = $image;
         }
     }
+
+    $demoValue = $rawProject['demo'] ?? $rawProject['demoUrl'] ?? null;
 
     $projects[] = [
         'slug' => $slug,
         'name' => $name,
         'shortDescription' => $shortDescription,
+        'description' => $readOptionalText($rawProject['descricaoCompleta'] ?? null, 5000),
         'technologies' => $technologies,
         'repositoryUrl' => $validateHttpsUrl($rawProject['link'] ?? null),
-        'image' => $image,
+        'demoUrl' => $validateHttpsUrl($demoValue),
+        'status' => $readOptionalText($rawProject['status'] ?? null, 80),
+        'featured' => isset($rawProject['destaque']) && is_bool($rawProject['destaque'])
+            ? $rawProject['destaque']
+            : null,
+        'images' => $images,
     ];
 }
 

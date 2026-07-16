@@ -2,6 +2,10 @@
 
 declare(strict_types=1);
 
+define('PORTFOLIO_APP', true);
+
+require __DIR__ . '/config/bootstrap.php';
+
 $profile = require __DIR__ . '/data/profile.php';
 $projects = require __DIR__ . '/data/projects.php';
 

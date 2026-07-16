@@ -1,7 +1,10 @@
 {
-    "name":"Endrew Marra Pedrosa",
-    "image":"./images/endrew.jpeg",
-    "github":"https://github.com/Endrewmarra",
-    "linkedin":"https://www.linkedin.com/in/endrewmarra/",
-    "email":"dumarra11@gmail.com"
+    "name": "Endrew Marra Pedrosa",
+    "title": "Estudante de Análise e Desenvolvimento de Sistemas",
+    "summary": "Desenvolvo projetos práticos e acadêmicos com foco em aplicações organizadas, funcionais e úteis.",
+    "image": "./images/profile/endrew.jpeg",
+    "github": "https://github.com/Endrewmarra",
+    "linkedin": "https://www.linkedin.com/in/endrewmarra/",
+    "email": "dumarra11@gmail.com",
+    "tel": "+55 18 996024484"
 }

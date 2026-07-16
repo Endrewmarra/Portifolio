@@ -2,6 +2,11 @@
 
 declare(strict_types=1);
 
+if (!defined('PORTFOLIO_APP')) {
+    http_response_code(404);
+    exit;
+}
+
 if (!isset($view) || !is_string($view) || !is_file($view)) {
     throw new RuntimeException('A view solicitada não está disponível.');
 }
@@ -30,6 +35,7 @@ $documentDescription = isset($pageDescription) && is_string($pageDescription)
     <meta name="description" content="<?= $escape($documentDescription) ?>">
     <meta name="color-scheme" content="light">
     <title><?= $escape($documentTitle) ?></title>
+    <link rel="icon" type="image/svg+xml" href="assets/images/profile/favicon.svg">
     <link rel="stylesheet" href="assets/css/reset.css">
     <link rel="stylesheet" href="assets/css/styles.css">
     <link rel="stylesheet" href="assets/css/variables.css">

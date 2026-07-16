@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-$escape = $escape ?? static fn (mixed $value): string => htmlspecialchars(
-    (string) $value,
-    ENT_QUOTES | ENT_SUBSTITUTE,
-    'UTF-8'
-);
+if (!defined('PORTFOLIO_APP')) {
+    http_response_code(404);
+    exit;
+}
+
 $footerName = isset($profile['name']) && is_string($profile['name'])
     ? $profile['name']
     : 'Endrew Marra Pedrosa';

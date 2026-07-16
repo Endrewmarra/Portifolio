@@ -2,16 +2,22 @@
 
 declare(strict_types=1);
 
-$escape = $escape ?? static fn (mixed $value): string => htmlspecialchars(
-    (string) $value,
-    ENT_QUOTES | ENT_SUBSTITUTE,
-    'UTF-8'
-);
+if (!defined('PORTFOLIO_APP')) {
+    http_response_code(404);
+    exit;
+}
+
 $isHomePage = ($currentPage ?? '') === 'home';
 $homeAnchorPrefix = $isHomePage ? '' : 'index.php';
 $profileName = isset($profile['name']) && is_string($profile['name'])
     ? $profile['name']
     : 'Endrew Marra Pedrosa';
+$profileTitle = isset($profile['title']) && is_string($profile['title'])
+    ? $profile['title']
+    : null;
+$profileSummary = isset($profile['summary']) && is_string($profile['summary'])
+    ? $profile['summary']
+    : null;
 ?>
 <aside class="sidebar" aria-label="Apresentação e navegação">
     <div class="sidebar__inner">
@@ -30,7 +36,13 @@ $profileName = isset($profile['name']) && is_string($profile['name'])
 
             <div class="profile__copy">
                 <a class="profile__name" href="index.php"><?= $escape($profileName) ?></a>
-                <p class="profile__label">Portfólio</p>
+                <?php if ($profileTitle !== null): ?>
+                    <p class="profile__title"><?= $escape($profileTitle) ?></p>
+                <?php endif; ?>
+
+                <?php if ($profileSummary !== null): ?>
+                    <p class="profile__summary"><?= $escape($profileSummary) ?></p>
+                <?php endif; ?>
             </div>
         </div>
 
@@ -64,7 +76,13 @@ $profileName = isset($profile['name']) && is_string($profile['name'])
                 <li><a href="mailto:<?= $escape($profile['email']) ?>">E-mail</a></li>
             <?php endif; ?>
 
-            <?php if (!empty($profile['phoneHref'])): ?>
+            <?php if (!empty($profile['phone']) && !empty($profile['whatsapp'])): ?>
+                <li>
+                    <a href="<?= $escape($profile['whatsapp']) ?>" target="_blank" rel="noopener noreferrer">
+                        Telefone
+                    </a>
+                </li>
+            <?php elseif (!empty($profile['phoneHref'])): ?>
                 <li><a href="tel:<?= $escape($profile['phoneHref']) ?>">Telefone</a></li>
             <?php endif; ?>
         </ul>

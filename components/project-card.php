@@ -2,35 +2,68 @@
 
 declare(strict_types=1);
 
+if (!defined('PORTFOLIO_APP')) {
+    http_response_code(404);
+    exit;
+}
+
 if (!isset($project) || !is_array($project)) {
     return;
 }
 
-$escape = $escape ?? static fn (mixed $value): string => htmlspecialchars(
-    (string) $value,
-    ENT_QUOTES | ENT_SUBSTITUTE,
-    'UTF-8'
-);
+$images = isset($project['images']) && is_array($project['images'])
+    ? $project['images']
+    : [];
+$coverImage = $images[0] ?? null;
+$technologies = isset($project['technologies']) && is_array($project['technologies'])
+    ? $project['technologies']
+    : [];
+$visibleTechnologies = array_slice($technologies, 0, 4);
+$hiddenTechnologyCount = max(0, count($technologies) - count($visibleTechnologies));
 ?>
 <article class="project-card">
-    <?php if (!empty($project['image'])): ?>
-        <img
-            class="project-card__image"
-            src="<?= $escape($project['image']) ?>"
-            alt="Prévia do projeto <?= $escape($project['name']) ?>"
-            loading="lazy"
-        >
-    <?php endif; ?>
+    <div class="project-card__media">
+        <?php if (is_array($coverImage)): ?>
+            <img
+                class="project-card__image"
+                src="<?= $escape($coverImage['src']) ?>"
+                alt="<?= $escape($coverImage['alt']) ?>"
+                loading="lazy"
+                decoding="async"
+            >
+
+            <?php if (count($images) > 1): ?>
+                <span class="project-card__image-count">
+                    <?= count($images) ?> imagens
+                </span>
+            <?php endif; ?>
+        <?php else: ?>
+            <div class="project-card__placeholder" aria-hidden="true">
+                <span>Imagem em breve</span>
+            </div>
+        <?php endif; ?>
+    </div>
 
     <div class="project-card__body">
         <h3><?= $escape($project['name']) ?></h3>
-        <p><?= $escape($project['shortDescription']) ?></p>
 
-        <?php if (!empty($project['technologies'])): ?>
+        <?php if (!empty($project['status'])): ?>
+            <p class="project-status"><?= $escape($project['status']) ?></p>
+        <?php endif; ?>
+
+        <p class="project-card__description"><?= $escape($project['shortDescription']) ?></p>
+
+        <?php if ($visibleTechnologies !== []): ?>
             <ul class="tag-list" aria-label="Tecnologias utilizadas">
-                <?php foreach ($project['technologies'] as $technology): ?>
+                <?php foreach ($visibleTechnologies as $technology): ?>
                     <li><?= $escape($technology) ?></li>
                 <?php endforeach; ?>
+
+                <?php if ($hiddenTechnologyCount > 0): ?>
+                    <li class="tag-list__more" aria-label="Mais <?= $hiddenTechnologyCount ?> tecnologias">
+                        +<?= $hiddenTechnologyCount ?>
+                    </li>
+                <?php endif; ?>
             </ul>
         <?php endif; ?>
 
